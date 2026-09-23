@@ -52,8 +52,11 @@ parameters:
     description: >-
       Which site's export rules to apply. Each site knows the quirks of one
       source; everything downstream of it is identical.
-    type: string
+    type: enum
+    allowedValues:
+      - ieeg
     default: ieeg
+    required: false
 
   - name: DUPLICATE_RULE
     label: Repeated import rule
@@ -63,23 +66,33 @@ parameters:
       dropped. first (oldest), last (newest) and widest (most channels) each
       keep one copy and discard the rest, which can lose channels the other
       copies named.
-    type: string
+    type: enum
+    allowedValues:
+      - exact
+      - first
+      - last
+      - widest
     default: exact
+    required: false
 
   - name: JSON_BODIES
     label: Structured bodies
     description: >-
       Write each mark's description and its source annotation id as a JSON
       body rather than plain text. Gives a migration an audit trail back to
-      the row an annotation came from.
-    type: string
-    default: "false"
+      the row an annotation came from. Worth turning on for a source whose
+      description only repeats its type, which would otherwise write empty
+      bodies.
+    type: boolean
+    default: false
+    required: false
 
   - name: SOURCE_PREFIX
     label: Channel id prefix
     description: >-
       Prepended to every channel id. Set it when a run merges annotations from
       more than one source, so two sites with a layer of the same name do not
-      collide.
+      collide and fail the branch merge.
     type: string
     default: ""
+    required: false
